@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { ReactNode } from "react";
 import { Spinner } from "../spinner";
+import type { ReactNode } from "react";
 
 interface DeleteConfirmModalProps {
   title?: string;

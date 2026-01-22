@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AuctionEditModal } from "./auction-edit-modal";
+import { DeleteConfirmModal } from "@/components/ui/custom/delete-confirm";
 
 export type Auction = {
   id: string;
@@ -108,13 +109,18 @@ export const auctionColumns: ColumnDef<Auction>[] = [
     cell: ({ row }) => (
       <div className="flex items-center gap-1">
         <AuctionEditModal auction={row.original} />
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-8 w-8 text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <DeleteConfirmModal
+          onDelete={() => console.log("Delete auction:", row.original.id)}
+          trigger={
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          }
+        />
       </div>
     ),
     enableSorting: false,

@@ -434,19 +434,19 @@ export function AuctionCreateModal() {
 
           <div className="p-6 border-t flex justify-end gap-3">
             <Button
-              type="submit"
-              loading={isSubmitting}
-              loadingText="Publishing..."
-            >
-              Publish Auction
-            </Button>
-            <Button
               type="button"
               variant="destructive"
               onClick={() => setOpen(false)}
               disabled={isSubmitting}
             >
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loadingText="Publishing..."
+            >
+              Publish Auction
             </Button>
           </div>
         </form>

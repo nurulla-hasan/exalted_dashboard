@@ -439,19 +439,19 @@ export function AuctionEditModal({ auction }: AuctionEditModalProps) {
 
           <div className="p-6 border-t flex justify-end gap-3">
             <Button
-              type="submit"
-              loading={isSubmitting}
-              loadingText="Saving..."
-            >
-              Save
-            </Button>
-            <Button
               type="button"
               variant="destructive"
               onClick={() => setOpen(false)}
               disabled={isSubmitting}
             >
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loadingText="Saving..."
+            >
+              Save
             </Button>
           </div>
         </form>
