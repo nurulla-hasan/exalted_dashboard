@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -11,19 +11,16 @@ interface BackButtonProps {
 }
 
 export function BackButton({ label = "Back", className }: BackButtonProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <Button
       variant="outline"
-      onClick={() => router.back()}
-      className={cn(
-        "rounded-full font-medium transition-all hover:-translate-x-1 active:scale-95 flex items-center gap-2.5 shadow-xl",
-        className
-      )}
+      onClick={() => navigate(-1)}
+      className={cn("flex items-center gap-2", className)}
     >
-      <ArrowLeft className="stroke-[2.5px]" />
-      <span className="tracking-tight">{label}</span>
+      <ArrowLeft className="h-4 w-4" />
+      <span>{label}</span>
     </Button>
   );
 }
