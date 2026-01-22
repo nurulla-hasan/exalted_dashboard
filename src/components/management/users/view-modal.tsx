@@ -47,7 +47,7 @@ const UserViewModal = () => {
             </div>
 
             <DialogHeader className="mt-4 text-center">
-              <DialogTitle className="text-xl font-semibold font-crimson">
+              <DialogTitle className="text-xl font-semibold">
                 {fakeUser.name}
               </DialogTitle>
             </DialogHeader>

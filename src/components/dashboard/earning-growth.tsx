@@ -35,15 +35,15 @@ const chartConfig = {
 const EarningGrowthChart = () => {
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium font-crimson">
+      <CardHeader>
+        <CardTitle className="text-base font-medium">
           Earning Growth
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent>
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-55 w-full"
+          className="aspect-auto h-69 w-full"
         >
           <AreaChart data={chartData}>
             <defs>

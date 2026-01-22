@@ -9,25 +9,23 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  UserRoundPen,
-  BadgeInfo,
+  HandCoins,
+  Package,
+  Users,
+  History,
+  Grid2X2,
+  BadgeDollarSign,
+  Info,
+  Lightbulb,
+  Accessibility,
   ReceiptText,
   GlobeLock,
+  HelpCircle,
   ListOrdered,
-  Users,
-  Layers,
-  Dumbbell,
-  BadgeCheck,
-  Newspaper,
-  Wallet,
-  Ticket,
-  MessageSquareQuote,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
-// import { useDispatch } from "react-redux";
-// import { setAccessToken, setAdmin } from "@/redux/feature/auth/authSlice";
 import { Button } from "../ui/button";
 
 const Sidebar = ({
@@ -37,7 +35,6 @@ const Sidebar = ({
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
 }) => {
-  // const dispatch = useDispatch();
   const location = useLocation();
   const prevLocation = useRef(location);
   const section = location.pathname.split("/")[1] || "";
@@ -45,7 +42,7 @@ const Sidebar = ({
   const isManagementPath = section === "management";
 
   const [isManagementOpen, setIsManagementOpen] = useState(!isManagementPath);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(isSettingsPath);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(!isSettingsPath);
 
   useEffect(() => {
     if (prevLocation.current !== location && isSidebarOpen) {
@@ -54,71 +51,32 @@ const Sidebar = ({
     prevLocation.current = location;
   }, [location, isSidebarOpen, setIsSidebarOpen]);
 
-  // const handleLogout = () => {
-  //     dispatch(setAdmin(null));
-  //     dispatch(setAccessToken(null));
-  //     localStorage.removeItem("accessToken");
-  //     window.location.href = "/auth/login";
-  // };
-
   const navItems = useMemo(
     () => [{ name: "Dashboard", icon: LayoutGrid, href: "/" }],
     [],
   );
 
-  const userManagementItems = [
-    { name: "User Management", icon: Users, href: "/management/users" },
-    {
-      name: "Trainer Management",
-      icon: BadgeCheck,
-      href: "/management/trainers",
-    },
-  ];
-
-  const businessManagementItems = [
-    {
-      name: "Program Management",
-      icon: Layers,
-      href: "/management/programs",
-    },
-    { name: "Gym Management", icon: Dumbbell, href: "/management/gyms" },
-  ];
-
-  const moderationItems = [
-    {
-      name: "Newsfeed Moderation",
-      icon: Newspaper,
-      href: "/management/newsfeed",
-    },
-    {
-      name: "Manage Subscription",
-      icon: Wallet,
-      href: "/management/subscriptions",
-    },
-  ];
-
-  const supportItems = [
-    { name: "Manage Ticket", icon: Ticket, href: "/management/tickets" },
-    { name: "Reviews", icon: MessageSquareQuote, href: "/management/reviews" },
-  ];
-
   const managementItems = [
-    ...userManagementItems,
-    ...businessManagementItems,
-    ...moderationItems,
-    ...supportItems,
+    { name: "Auction Management", icon: HandCoins, href: "/auction-management" },
+    { name: "Order Management", icon: Package, href: "/order-management" },
+    { name: "User Management", icon: Users, href: "/user-management" },
+    { name: "Transactions", icon: History, href: "/transactions" },
+    { name: "Category & Banner", icon: Grid2X2, href: "/category-banner" },
+    { name: "Financial Orders", icon: BadgeDollarSign, href: "/financial-orders" },
   ];
 
   const settingsSubItems = useMemo(
     () => [
-      { name: "Profile", icon: UserRoundPen, href: "/settings/profile" },
-      { name: "About", icon: BadgeInfo, href: "/settings/about" },
-      { name: "Terms", icon: ReceiptText, href: "/settings/terms" },
-      { name: "Privacy", icon: GlobeLock, href: "/settings/privacy" },
+      { name: "About Us", icon: Info, href: "/settings/about" },
+      { name: "Tips & tricks", icon: Lightbulb, href: "/settings/tips" },
+      { name: "Accessibility", icon: Accessibility, href: "/settings/accessibility" },
+      { name: "Terms and Conditions", icon: ReceiptText, href: "/settings/terms" },
+      { name: "Privacy Policy", icon: GlobeLock, href: "/settings/privacy" },
+      { name: "FAQs", icon: HelpCircle, href: "/settings/faqs" },
     ],
     [],
   );
-  // text-sidebar-primary-foreground
+
   return (
     <div
       className={`fixed top-0 left-0 z-40 h-screen text-sidebar-primary-foreground w-64 transition-transform duration-300 ease-in-out transform ${
@@ -186,7 +144,7 @@ const Sidebar = ({
                     animationFillMode: "both",
                   }}
                   className={({ isActive }) =>
-                    `animate-fade-in-up w-[90%] ml-5 flex items-center justify-start px-2 py-2 rounded-sm text-sm font-medium transition-colors duration-200  
+                    `animate-fade-in-up w-[90%] ml-5 flex items-center justify-start px-2 py-2 rounded-sm text-sm font-medium transition-colors duration-200   
                                 ${
                                   isActive
                                     ? "border-x-2 border-primary bg-primary/20"
@@ -234,7 +192,7 @@ const Sidebar = ({
                     animationFillMode: "both",
                   }}
                   className={({ isActive }) =>
-                    `animate-fade-in-up w-[90%] ml-5 flex items-center justify-start px-2 py-2 rounded-sm text-sm font-medium transition-colors duration-200  
+                    `animate-fade-in-up w-[90%] ml-5 flex items-center justify-start px-2 py-2 rounded-sm text-sm font-medium transition-colors duration-200   
                                 ${
                                   isActive
                                     ? "border-x-2 border-primary bg-primary/20"

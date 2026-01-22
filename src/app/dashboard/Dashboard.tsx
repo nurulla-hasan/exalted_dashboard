@@ -29,7 +29,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-medium font-crimson">
+              <CardTitle className="text-base font-medium">
                 Active Auctions
               </CardTitle>
               <span className="text-xs text-primary cursor-pointer">View all</span>
