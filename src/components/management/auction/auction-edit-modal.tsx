@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, CalendarIcon, Clock, ImagePlus, X } from "lucide-react";
+import { Pencil, CalendarIcon, Clock, ImagePlus, X } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import type { Auction } from "./auction-columns";
 
 const auctionSchema = z.object({
   itemName: z.string().min(1, "Item name is required").max(100),
@@ -44,22 +45,30 @@ const auctionSchema = z.object({
 
 type AuctionFormValues = z.infer<typeof auctionSchema>;
 
-export function AuctionCreateModal() {
+interface AuctionEditModalProps {
+  auction: Auction;
+}
+
+export function AuctionEditModal({ auction }: AuctionEditModalProps) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([
+    auction.item.image,
+    "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=400", // mock additional images
+    "https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=400",
+  ]);
 
   const form = useForm<AuctionFormValues>({
     resolver: zodResolver(auctionSchema),
     defaultValues: {
-      itemName: "",
-      category: "",
-      reserveBid: "",
-      incrementValue: "",
-      description: "",
-      financing: "Available",
+      itemName: auction.item.name,
+      category: auction.category,
+      reserveBid: auction.reserveBid.toString(),
+      incrementValue: auction.incrementValue,
+      description: "The iPhone 14 Pro Max delivers a solid all-round experience as Apple's latest and greatest smartphone offering of the year.", // mock description
+      financing: auction.financing,
       months: "12 Months",
-      itemImages: [],
+      itemImages: images,
     },
   });
 
@@ -99,16 +108,9 @@ export function AuctionCreateModal() {
   const onSubmit = async (values: AuctionFormValues) => {
     setIsSubmitting(true);
     try {
-      // Combine startingDate and startingTime if needed for API
-      const combinedDateTime = new Date(values.startingDate);
-      combinedDateTime.setHours(values.startingTime.getHours());
-      combinedDateTime.setMinutes(values.startingTime.getMinutes());
-      
-      console.log("Auction Data:", { ...values, combinedDateTime });
-      // Simulating API call
+      console.log("Updated Auction Data:", values);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setOpen(false);
-      form.reset();
     } catch (error) {
       console.error(error);
     } finally {
@@ -120,12 +122,15 @@ export function AuctionCreateModal() {
     <ModalWrapper
       open={open}
       onOpenChange={setOpen}
-      title="Create New Auction"
-      description="Fill in the details below to list a new item for auction."
+      title="Edit Auction"
+      description="Update the details of this auction listing."
       actionTrigger={
-        <Button className="rounded-full">
-          <Plus />
-          Create Auction
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-8 w-8 text-amber-500 border-amber-500 hover:bg-amber-50 hover:text-amber-600"
+        >
+          <Pencil className="h-4 w-4" />
         </Button>
       }
     >
@@ -436,9 +441,9 @@ export function AuctionCreateModal() {
             <Button
               type="submit"
               loading={isSubmitting}
-              loadingText="Publishing..."
+              loadingText="Saving..."
             >
-              Publish Auction
+              Save
             </Button>
             <Button
               type="button"

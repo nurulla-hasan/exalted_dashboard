@@ -1,5 +1,5 @@
 import PageLayout from "@/components/common/page-layout";
-import PageHeader from "@/components/ui/page-header";
+import PageHeader from "@/components/ui/custom/page-header";
 
 const Tips = () => {
   return (

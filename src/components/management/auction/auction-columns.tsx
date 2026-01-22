@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from "@tanstack/react-table";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AuctionEditModal } from "./auction-edit-modal";
 
 export type Auction = {
   id: string;
@@ -104,15 +105,9 @@ export const auctionColumns: ColumnDef<Auction>[] = [
   {
     id: "actions",
     header: "Action",
-    cell: () => (
+    cell: ({ row }) => (
       <div className="flex items-center gap-1">
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-8 w-8 text-amber-500 border-amber-500 hover:bg-amber-50 hover:text-amber-600"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
+        <AuctionEditModal auction={row.original} />
         <Button
           variant="outline"
           size="icon"
