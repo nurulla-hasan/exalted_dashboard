@@ -11,12 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import TiptapEditor from "@/components/ui/tiptap-editor";
 // import { ErrorToast, SuccessToast } from "@/lib/utils";
 import { Save } from "lucide-react";
-import PageHeader from "../../../components/ui/page-header";
+import PageHeader from "@/components/ui/custom/page-header";
+import TiptapEditor from "@/components/ui/custom/tiptap-editor";
 
-//Replace the form type from AboutFormValues to PrivacyFormValues
 type FormValues = {
   title: string;
   content: string;
