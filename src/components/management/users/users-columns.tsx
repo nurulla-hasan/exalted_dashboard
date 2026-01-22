@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from "@tanstack/react-table";
-import { Trash2, Pencil } from "lucide-react";
+import { Ban } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -64,25 +64,21 @@ export const usersColumns: ColumnDef<User>[] = [
   },
   {
     id: "actions",
-    header: () => <div className="text-right pr-8">Actions</div>,
-    cell: () => (
-      <div className="flex items-center justify-end gap-1">
-        <Button
-          variant="outline"
-          size="icon"
-          className="text-primary hover:text-primary"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="text-red-500 hover:text-red-600"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-    ),
+    header: () => <div className="text-right mr-7">Actions</div>,
+    cell: () => {
+      return (
+        <div className="flex items-center justify-end gap-2 px-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-red-900/30 dark:hover:bg-red-950 flex items-center gap-2"
+          >
+            <Ban />
+            <span>Block</span>
+          </Button>
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
