@@ -115,8 +115,8 @@ export function AuctionCreateModal() {
       title="Create New Auction"
       description="Fill in the details below to list a new item for auction."
       actionTrigger={
-        <Button className="rounded-full bg-amber-500 hover:bg-amber-600 text-white font-medium">
-          <Plus className="mr-1 h-4 w-4" />
+        <Button className="rounded-full">
+          <Plus />
           Create Auction
         </Button>
       }
@@ -134,7 +134,7 @@ export function AuctionCreateModal() {
                   name="itemName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase italic font-bold text-xs">Item Name</FormLabel>
+                      <FormLabel>Item Name</FormLabel>
                       <FormControl>
                         <Input placeholder="Enter item name" {...field} />
                       </FormControl>
@@ -147,7 +147,7 @@ export function AuctionCreateModal() {
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase italic font-bold text-xs">Category</FormLabel>
+                      <FormLabel>Category</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -172,7 +172,7 @@ export function AuctionCreateModal() {
                   name="reserveBid"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase italic font-bold text-xs">Reserve Bid</FormLabel>
+                      <FormLabel>Reserve Bid</FormLabel>
                       <FormControl>
                         <Input placeholder="0.00" {...field} />
                       </FormControl>
@@ -185,7 +185,7 @@ export function AuctionCreateModal() {
                   name="incrementValue"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase italic font-bold text-xs">Increment Value</FormLabel>
+                      <FormLabel>Increment Value</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g. 10" {...field} />
                       </FormControl>
@@ -201,7 +201,7 @@ export function AuctionCreateModal() {
                   name="startingDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="uppercase italic font-bold text-xs">Starting Date</FormLabel>
+                      <FormLabel>Starting Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -239,7 +239,7 @@ export function AuctionCreateModal() {
                   name="startingTime"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="uppercase italic font-bold text-xs">Starting Time</FormLabel>
+                      <FormLabel>Starting Time</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -350,7 +350,7 @@ export function AuctionCreateModal() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="uppercase italic font-bold text-xs">Description</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea 
                         placeholder="Enter item description" 
@@ -369,7 +369,7 @@ export function AuctionCreateModal() {
                   name="financing"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase italic font-bold text-xs">Financing</FormLabel>
+                      <FormLabel>Financing</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -390,7 +390,7 @@ export function AuctionCreateModal() {
                   name="months"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase italic font-bold text-xs">Months</FormLabel>
+                      <FormLabel>Months</FormLabel>
                       <FormControl>
                         <Input placeholder="12 Months" {...field} />
                       </FormControl>
@@ -401,7 +401,7 @@ export function AuctionCreateModal() {
               </div>
 
               <div className="space-y-2">
-                <FormLabel className="uppercase italic font-bold text-xs">Upload Image</FormLabel>
+                <FormLabel>Upload Image</FormLabel>
                 <div className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:bg-muted/50 cursor-pointer transition-colors h-24">
                   <ImagePlus className="h-5 w-5 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground font-medium">Click to upload image</span>
@@ -413,19 +413,18 @@ export function AuctionCreateModal() {
           <div className="p-6 border-t flex justify-end gap-3">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               onClick={() => setOpen(false)}
               disabled={isSubmitting}
-              className="font-bold uppercase italic"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting}
-              className="font-bold uppercase italic"
+              loading={isSubmitting}
+              loadingText="Publishing..."
             >
-              {isSubmitting ? "Publishing..." : "Publish Auction"}
+              Publish Auction
             </Button>
           </div>
         </form>
