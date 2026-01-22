@@ -38,14 +38,14 @@ const Sidebar = ({
   setIsSidebarOpen: (open: boolean) => void;
 }) => {
   // const dispatch = useDispatch();
-const location = useLocation();
-const prevLocation = useRef(location);
-const section = location.pathname.split("/")[1] || "";
-const isSettingsPath = section === "settings";
-const isManagementPath = section === "management";
+  const location = useLocation();
+  const prevLocation = useRef(location);
+  const section = location.pathname.split("/")[1] || "";
+  const isSettingsPath = section === "settings";
+  const isManagementPath = section === "management";
 
-const [isManagementOpen, setIsManagementOpen] = useState(!isManagementPath);
-const [isSettingsOpen, setIsSettingsOpen] = useState(isSettingsPath);
+  const [isManagementOpen, setIsManagementOpen] = useState(!isManagementPath);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(isSettingsPath);
 
   useEffect(() => {
     if (prevLocation.current !== location && isSidebarOpen) {
@@ -63,12 +63,16 @@ const [isSettingsOpen, setIsSettingsOpen] = useState(isSettingsPath);
 
   const navItems = useMemo(
     () => [{ name: "Dashboard", icon: LayoutGrid, href: "/" }],
-    []
+    [],
   );
 
   const userManagementItems = [
     { name: "User Management", icon: Users, href: "/management/users" },
-    { name: "Trainer Management", icon: BadgeCheck, href: "/management/trainers" },
+    {
+      name: "Trainer Management",
+      icon: BadgeCheck,
+      href: "/management/trainers",
+    },
   ];
 
   const businessManagementItems = [
@@ -112,17 +116,19 @@ const [isSettingsOpen, setIsSettingsOpen] = useState(isSettingsPath);
       { name: "Terms", icon: ReceiptText, href: "/settings/terms" },
       { name: "Privacy", icon: GlobeLock, href: "/settings/privacy" },
     ],
-    []
+    [],
   );
-
+  // text-sidebar-primary-foreground
   return (
     <div
-      className={`fixed top-0 left-0 z-40 h-screen bg-sidebar text-sidebar-foreground w-64 transition-transform duration-300 ease-in-out transform ${
+      className={`fixed top-0 left-0 z-40 h-screen text-sidebar-primary-foreground w-64 transition-transform duration-300 ease-in-out transform ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       } lg:translate-x-0 flex flex-col`}
     >
-      <div className="pb-20">
-        {/* Logo */}
+      <div className="p-6">
+        <span className="text-3xl font-bold font-rakkas text-primary">
+          Bidding Web
+        </span>
       </div>
       <ScrollArea className="h-[calc(100vh-149px)]">
         <nav className="grow space-y-3 p-4">
@@ -245,9 +251,9 @@ const [isSettingsOpen, setIsSettingsOpen] = useState(isSettingsPath);
           </Collapsible>
         </nav>
       </ScrollArea>
-      <div className="border-t p-4">
+      <div className="border-t border-white/10 p-4">
         <Link to="/auth/login" className="block w-full text-center">
-          <Button variant="outline" className="justify-start w-full">
+          <Button variant="ghost" className="justify-start w-full">
             <LogOut />
             Logout
           </Button>

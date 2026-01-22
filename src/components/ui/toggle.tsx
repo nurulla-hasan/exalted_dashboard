@@ -12,6 +12,8 @@ const toggleVariants = cva(
         default: "bg-transparent",
         outline:
           "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground",
+          ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
       },
       size: {
         default: "h-9 px-2 min-w-9",
@@ -42,4 +44,5 @@ function Toggle({
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Toggle, toggleVariants }

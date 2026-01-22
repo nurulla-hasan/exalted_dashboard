@@ -39,7 +39,7 @@ const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
     <header className="fixed top-0 right-0 left-0 h-20 bg-sidebar text-sidebar-foreground z-30">
       <div className="relative h-full flex items-center justify-between px-4">
         {/* Left side: mobile menu or spacer */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
@@ -50,23 +50,11 @@ const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </Button>
         </div>
 
-        {/* Center: logo with notch */}
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 h-14 flex items-center justify-center pointer-events-none">
-          <div className="relative w-70 h-full bg-card notch-shape flex items-center justify-center pointer-events-auto">
-            <div className="flex items-center gap-4">
-              <img src="/logo.png" alt="Logo" className="h-12 w-auto" />
-              <span className="text-2xl font-medium font-crimson text-foreground">
-                VitaKinetic
-              </span>
-            </div>
-          </div>
-        </div>
-
         {/* Right: theme toggle + profile */}
         <div className="flex items-center space-x-5">
           {/* Theme toggle */}
           <Toggle
-            variant="outline"
+            variant="ghost"
             size="sm"
             className="group rounded-full hidden lg:flex"
             pressed={theme === "dark"}
@@ -82,9 +70,9 @@ const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </Toggle>
           {/* Notification icon */}
           <Link to="/notifications">
-            <Button variant="outline" size="icon-sm" className="rounded-full relative">
+            <Button variant="ghost" size="icon-sm" className="rounded-full relative">
               <Bell className="h-4 w-4" />
-              <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full border-2 border-background"></span>
+              {/* <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full border-2 border-background"></span> */}
             </Button>
           </Link>
 

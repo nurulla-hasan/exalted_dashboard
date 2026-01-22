@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from "@tanstack/react-table";
-import { Trash2, Ban } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import UserViewModal from "./view-modal";
 
 export type User = {
   id: number;
@@ -17,38 +15,17 @@ export type User = {
 
 export const usersColumns: ColumnDef<User>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <label className="flex items-center gap-2 cursor-pointer select-none">
-        <span className="font-semibold">
-          Select All
-        </span>
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value: boolean) =>
-            table.toggleAllPageRowsSelected(!!value)
-          }
-          aria-label="Select all"
-        />
-      </label>
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "name",
-    header: "User Name",
+    header: "Name",
     cell: ({ row }) => (
-      <span className="text-sm font-medium text-foreground">
-        {row.original.name}
-      </span>
+      <div className="flex items-center gap-3">
+        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-sm">
+          {row.original.name.charAt(0)}
+        </div>
+        <span className="text-sm font-medium text-foreground">
+          {row.original.name}
+        </span>
+      </div>
     ),
   },
   {
@@ -90,20 +67,19 @@ export const usersColumns: ColumnDef<User>[] = [
     header: () => <div className="text-right pr-8">Actions</div>,
     cell: () => (
       <div className="flex items-center justify-end gap-1">
-        <UserViewModal />
         <Button
           variant="outline"
           size="icon"
-          className="text-amber-500 hover:text-amber-600"
+          className="text-primary hover:text-primary"
         >
-          <Ban />
+          <Pencil className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
           size="icon"
           className="text-red-500 hover:text-red-600"
         >
-          <Trash2 />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
     ),

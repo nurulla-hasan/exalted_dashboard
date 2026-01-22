@@ -34,7 +34,7 @@ const chartConfig = {
 
 const EarningGrowthChart = () => {
   return (
-    <Card className="border-muted/40">
+    <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-medium font-crimson">
           Earning Growth
