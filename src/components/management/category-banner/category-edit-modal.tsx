@@ -66,10 +66,9 @@ export function CategoryEditModal({ category }: CategoryEditModalProps) {
       actionTrigger={
         <Button
           variant="outline"
-          size="icon"
-          className="h-8 w-8"
+          size="icon-sm"
         >
-          <Pencil className="h-4 w-4 text-primary" />
+          <Pencil className="text-primary" />
         </Button>
       }
     >
