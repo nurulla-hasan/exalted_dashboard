@@ -1,7 +1,6 @@
 import PageLayout from "@/components/common/page-layout";
 import Stats from "@/components/dashboard/stats";
 import EarningGrowthChart from "@/components/dashboard/earning-growth";
-import { DataTable } from "@/components/ui/data-table";
 import TopBidder from "@/components/dashboard/top-bidder";
 import TopPerformingAuctions from "@/components/dashboard/top-performing-auctions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import {
   auctionColumns,
   type Auction,
 } from "@/components/dashboard/auctions-columns";
+import { DataTable } from "@/components/ui/custom/data-table";
 
 const Dashboard = () => {
 

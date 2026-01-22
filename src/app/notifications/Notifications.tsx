@@ -1,10 +1,10 @@
 import PageLayout from "@/components/common/page-layout";
-import PageHeader from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bell, CheckCircle2, Info, AlertTriangle, Clock, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import PageHeader from "@/components/ui/custom/page-header";
 
 const notifications = [
   {

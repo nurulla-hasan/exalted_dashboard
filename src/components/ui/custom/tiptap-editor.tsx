@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "./tiptap-editor.css";
 
@@ -26,9 +26,9 @@ const generateSignature = async (publicId: string, timestamp: number, apiSecret:
 
 const deleteFromCloudinary = async (publicId: string, resourceType: string = "image") => {
   try {
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-    const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const apiKey = import.meta.env.VITE_CLOUDINARY_API_KEY;
+    const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
 
     if (!cloudName || !apiKey || !apiSecret) {
       console.warn("Cloudinary credentials missing. Deleting from editor only.");
@@ -464,8 +464,8 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
     setIsUploading(true);
 
     try {
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
       if (!cloudName || !uploadPreset) {
         throw new Error("Cloudinary cloud name or upload preset is missing in environment variables.");
