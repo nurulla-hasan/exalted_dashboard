@@ -1,50 +1,171 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "./tiptap-editor.css";
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import { Node, mergeAttributes } from "@tiptap/core";
+import { useEditor, EditorContent, ReactNodeViewRenderer, NodeViewWrapper } from "@tiptap/react";
+import { Node, Mark, mergeAttributes } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
+import { X } from "lucide-react";
 
-// Custom Video Extension
-const Video = Node.create({
-  name: "video",
-  group: "block",
-  selectable: true,
-  draggable: true,
-  atom: true,
+interface CloudinaryUploadResult {
+  url: string;
+  publicId: string;
+  resourceType: string;
+}
 
+const generateSignature = async (publicId: string, timestamp: number, apiSecret: string) => {
+  const str = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+  const msgUint8 = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-1", msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+};
+
+const deleteFromCloudinary = async (publicId: string, resourceType: string = "image") => {
+  try {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
+    const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      console.warn("Cloudinary credentials missing. Deleting from editor only.");
+      return;
+    }
+
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature = await generateSignature(publicId, timestamp, apiSecret);
+
+    const formData = new FormData();
+    formData.append("public_id", publicId);
+    formData.append("signature", signature);
+    formData.append("api_key", apiKey);
+    formData.append("timestamp", timestamp.toString());
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/destroy`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const result: unknown = await response.json();
+    if ((result as { result?: string }).result === "ok") {
+      console.log(`Successfully deleted ${resourceType} from Cloudinary:`, publicId);
+    } else {
+      console.error(`Failed to delete ${resourceType} from Cloudinary:`, result);
+    }
+  } catch (error: unknown) {
+    console.error("Cloudinary delete error:", error);
+  }
+};
+
+const CustomImage = Image.extend({
   addAttributes() {
     return {
-      src: {
+      ...this.parent?.(),
+      publicId: {
         default: null,
+        rendered: false,
       },
-      controls: {
-        default: true,
+      resourceType: {
+        default: "image",
+        rendered: false,
       },
     };
   },
-
-  parseHTML() {
-    return [
-      {
-        tag: "video",
-      },
-    ];
-  },
-
   renderHTML({ HTMLAttributes }) {
-    return [
-      "video",
-      mergeAttributes(HTMLAttributes, {
-        controls: true,
-        class: "rounded-lg border border-border my-4",
-      }),
-    ];
+    return ["img", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
+  },
+  addNodeView() {
+    return ReactNodeViewRenderer(({ node, HTMLAttributes, deleteNode }) => {
+      return (
+        <NodeViewWrapper className="relative inline-block group my-4">
+          <img {...HTMLAttributes} className="rounded-lg border border-border" alt={HTMLAttributes.alt || ""} />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (node.attrs.publicId) deleteFromCloudinary(node.attrs.publicId, node.attrs.resourceType);
+              deleteNode();
+            }}
+            className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md z-10"
+          >
+            <X size={14} />
+          </button>
+        </NodeViewWrapper>
+      );
+    });
   },
 });
+
+// Custom Video Extension
+// const Video = Node.create({
+//   name: "video",
+//   group: "block",
+//   selectable: true,
+//   draggable: true,
+//   atom: true,
+
+//   addAttributes() {
+//     return {
+//       src: {
+//         default: null,
+//       },
+//       controls: {
+//         default: true,
+//       },
+//       publicId: {
+//         default: null,
+//         rendered: false,
+//       },
+//       resourceType: {
+//         default: "video",
+//         rendered: false,
+//       },
+//     };
+//   },
+
+//   parseHTML() {
+//     return [
+//       {
+//         tag: "video",
+//       },
+//     ];
+//   },
+
+//   renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
+//     return [
+//       "video",
+//       mergeAttributes(HTMLAttributes, {
+//         controls: true,
+//         class: "rounded-lg border border-border my-4",
+//       }),
+//     ];
+//   },
+
+//   addNodeView() {
+//     return ReactNodeViewRenderer(({ node, HTMLAttributes, deleteNode }) => {
+//       return (
+//         <NodeViewWrapper className="relative inline-block group my-4">
+//           <video {...HTMLAttributes} className="rounded-lg border border-border" controls />
+//           <button
+//             onClick={(e) => {
+//               e.preventDefault();
+//               if (node.attrs.publicId) deleteFromCloudinary(node.attrs.publicId, node.attrs.resourceType);
+//               deleteNode();
+//             }}
+//             className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md z-10"
+//           >
+//             <X size={14} />
+//           </button>
+//         </NodeViewWrapper>
+//       );
+//     });
+//   },
+// });
 
 // Custom Audio Extension
 const Audio = Node.create({
@@ -62,6 +183,14 @@ const Audio = Node.create({
       controls: {
         default: true,
       },
+      publicId: {
+        default: null,
+        rendered: false,
+      },
+      resourceType: {
+        default: "video",
+        rendered: false,
+      },
     };
   },
 
@@ -73,13 +202,33 @@ const Audio = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return [
       "audio",
       mergeAttributes(HTMLAttributes, {
         class: "w-full my-4",
       }),
     ];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(({ node, HTMLAttributes, deleteNode }) => {
+      return (
+        <NodeViewWrapper className="relative block group my-4">
+          <audio {...HTMLAttributes} className="w-full" controls />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (node.attrs.publicId) deleteFromCloudinary(node.attrs.publicId, node.attrs.resourceType);
+              deleteNode();
+            }}
+            className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md z-10"
+          >
+            <X size={14} />
+          </button>
+        </NodeViewWrapper>
+      );
+    });
   },
 });
 
@@ -102,38 +251,70 @@ const FileAttachment = Node.create({
       fileSize: {
         default: "",
       },
+      publicId: {
+        default: null,
+        rendered: false,
+      },
+      resourceType: {
+        default: "raw",
+        rendered: false,
+      },
     };
   },
 
   parseHTML() {
     return [
       {
-        tag: 'a[data-type="file-attachment"]',
+        tag: 'div[data-type="file-attachment"]',
       },
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return [
-      "a",
+      "div",
       mergeAttributes(HTMLAttributes, {
         "data-type": "file-attachment",
-        class:
-          "flex items-center gap-3 p-4 border border-border rounded-lg no-underline my-4 hover:bg-muted transition-colors",
-        target: "_blank",
+        class: "relative group",
       }),
-      [
-        "span",
-        { class: "p-2 bg-primary/10 rounded-md text-primary" },
-        "📄", // Fallback icon
-      ],
-      [
-        "div",
-        { class: "flex flex-col gap-1" },
-        ["span", { class: "font-medium text-foreground" }, HTMLAttributes.fileName],
-        ["span", { class: "text-xs text-muted-foreground" }, HTMLAttributes.fileSize],
-      ],
     ];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(({ node, deleteNode }) => {
+      return (
+        <NodeViewWrapper className="relative group my-4">
+          <a
+            href={node.attrs.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 border border-border rounded-lg no-underline hover:bg-muted transition-colors w-full"
+          >
+            <span className="p-2 bg-primary/10 rounded-md text-primary text-2xl">
+              📄
+            </span>
+            <div className="flex flex-col gap-1 overflow-hidden">
+              <span className="font-medium text-foreground truncate max-w-50 md:max-w-md">
+                {node.attrs.fileName}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {node.attrs.fileSize}
+              </span>
+            </div>
+          </a>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (node.attrs.publicId) deleteFromCloudinary(node.attrs.publicId, node.attrs.resourceType);
+              deleteNode();
+            }}
+            className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md z-10"
+          >
+            <X size={14} />
+          </button>
+        </NodeViewWrapper>
+      );
+    });
   },
 });
 
@@ -161,7 +342,7 @@ const Youtube = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return [
       "div",
       { class: "youtube-container my-4" },
@@ -174,6 +355,39 @@ const Youtube = Node.create({
         }),
       ],
     ];
+  },
+});
+
+const InlineHeading = Mark.create({
+  name: "inlineHeading",
+  addAttributes() {
+    return {
+      level: {
+        default: 1,
+        parseHTML: (element: HTMLElement) => {
+          const value = element.getAttribute("data-inline-heading");
+          const parsed = value ? parseInt(value, 10) : 1;
+          return Number.isNaN(parsed) ? 1 : parsed;
+        },
+        renderHTML: (attributes: { level?: number }) => {
+          const level = attributes.level ?? 1;
+          return {
+            "data-inline-heading": String(level),
+            class: `inline-heading inline-heading-${level}`,
+          };
+        },
+      },
+    };
+  },
+  parseHTML() {
+    return [
+      {
+        tag: "span[data-inline-heading]",
+      },
+    ];
+  },
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
+    return ["span", HTMLAttributes, 0];
   },
 });
 
@@ -246,37 +460,44 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // REST API upload function (Backend Dev provided API)
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File): Promise<CloudinaryUploadResult> => {
     setIsUploading(true);
-    
-    try {
-      const formData = new FormData();
-      formData.append("file", file); // Key might be 'image' or 'file' depending on backend
-      
-      // Replace with your actual backend API endpoint
-      const API_URL = import.meta.env.VITE_API_UPLOAD_URL || "http://your-backend-api.com/upload";
-      
-      const response = await fetch(API_URL, {
-        method: "POST",
-        body: formData,
-        // If your API requires authentication, add headers here:
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // }
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Upload failed");
+    try {
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      if (!cloudName || !uploadPreset) {
+        throw new Error("Cloudinary cloud name or upload preset is missing in environment variables.");
       }
 
-      const data = await response.json();
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        await response.json();
+        throw new Error("Upload failed");
+      }
+
+      const data: unknown = await response.json();
+      const typed = data as { secure_url: string; public_id: string; resource_type: string };
       setIsUploading(false);
-      
-      // Adjust this based on your API response structure (e.g., data.url or data.data.url)
-      return data.url || data.secure_url || data.data?.url;
-    } catch (error: any) {
+
+      return {
+        url: typed.secure_url,
+        publicId: typed.public_id,
+        resourceType: typed.resource_type,
+      };
+    } catch (error: unknown) {
       setIsUploading(false);
       console.error("Upload error:", error);
       throw error;
@@ -296,8 +517,9 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      Image,
-      Video,
+      InlineHeading,
+      CustomImage,
+      // Video,
       Audio,
       Youtube,
       FileAttachment,
@@ -371,15 +593,24 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
     if (!file) return;
 
     try {
-      const url = await uploadFile(file);
+      const { url, publicId, resourceType } = await uploadFile(file);
       const fileSize = (file.size / 1024).toFixed(1) + " KB";
 
       if (file.type.startsWith("image/")) {
-        editor.chain().focus().setImage({ src: url }).run();
+        editor.chain().focus().insertContent({
+          type: "image",
+          attrs: { src: url, publicId: publicId, resourceType: resourceType }
+        }).run();
       } else if (file.type.startsWith("video/")) {
-        editor.chain().focus().insertContent(`<video src="${url}" controls></video>`).run();
+        editor.chain().focus().insertContent({
+          type: "video",
+          attrs: { src: url, publicId: publicId, resourceType: resourceType }
+        }).run();
       } else if (file.type.startsWith("audio/")) {
-        editor.chain().focus().insertContent(`<audio src="${url}" controls></audio>`).run();
+        editor.chain().focus().insertContent({
+          type: "audio",
+          attrs: { src: url, publicId: publicId, resourceType: resourceType }
+        }).run();
       } else {
         // For PDF, ZIP, etc.
         editor
@@ -391,6 +622,8 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
               href: url,
               fileName: file.name,
               fileSize: fileSize,
+              publicId: publicId,
+              resourceType: resourceType,
             },
           })
           .run();
@@ -591,9 +824,13 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
             <TooltipTrigger asChild>
               <Toggle
                 size="sm"
-                pressed={editor.isActive("heading", { level: 1 })}
+                pressed={editor.isActive("inlineHeading", { level: 1 })}
                 onPressedChange={() =>
-                  editor.chain().focus().toggleHeading({ level: 1 }).run()
+                  editor
+                    .chain()
+                    .focus()
+                    .toggleMark("inlineHeading", { level: 1 })
+                    .run()
                 }
               >
                 <Heading1 className="h-4 w-4" />
@@ -607,9 +844,13 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
             <TooltipTrigger asChild>
               <Toggle
                 size="sm"
-                pressed={editor.isActive("heading", { level: 2 })}
+                pressed={editor.isActive("inlineHeading", { level: 2 })}
                 onPressedChange={() =>
-                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                  editor
+                    .chain()
+                    .focus()
+                    .toggleMark("inlineHeading", { level: 2 })
+                    .run()
                 }
               >
                 <Heading2 className="h-4 w-4" />
@@ -623,9 +864,13 @@ const TiptapEditor = ({ value, onChange, placeholder }: TiptapEditorProps) => {
             <TooltipTrigger asChild>
               <Toggle
                 size="sm"
-                pressed={editor.isActive("heading", { level: 3 })}
+                pressed={editor.isActive("inlineHeading", { level: 3 })}
                 onPressedChange={() =>
-                  editor.chain().focus().toggleHeading({ level: 3 }).run()
+                  editor
+                    .chain()
+                    .focus()
+                    .toggleMark("inlineHeading", { level: 3 })
+                    .run()
                 }
               >
                 <Heading3 className="h-4 w-4" />

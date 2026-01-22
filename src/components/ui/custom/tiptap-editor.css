@@ -1,7 +1,7 @@
 .ProseMirror {
   outline: none;
   padding: 0.75rem 1rem;
-  min-height: 560px;
+  min-height: 500px;
   width: 100%;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
@@ -46,6 +46,21 @@
   margin: 1rem 0 0.5rem;
   color: inherit;
   line-height: 1.4;
+}
+
+.ProseMirror .inline-heading-1 {
+  font-size: 1.875rem;
+  font-weight: 800;
+}
+
+.ProseMirror .inline-heading-2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.ProseMirror .inline-heading-3 {
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 /* Paragraphs & Text */
@@ -224,4 +239,3 @@
   background: color-mix(in srgb, var(--primary) 10%, transparent);
   pointer-events: none;
 }
-
