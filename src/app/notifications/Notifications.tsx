@@ -89,7 +89,7 @@ const Notifications = () => {
                 !notification.isRead ? "bg-primary/5 ring-1 ring-primary/10" : "bg-background/50"
               )}
             >
-              <CardContent className="p-4 flex gap-4">
+              <CardContent className="flex gap-4">
                 <div className={cn(
                   "p-2 rounded-full shrink-0 h-fit",
                   !notification.isRead ? "bg-background shadow-sm" : "bg-muted/50"
@@ -118,12 +118,6 @@ const Notifications = () => {
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {notification.description}
                   </p>
-                </div>
-
-                <div className="flex flex-col justify-center">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
                 </div>
               </CardContent>
             </Card>

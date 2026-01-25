@@ -34,7 +34,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     header: "User's Name",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <Avatar className="h-8 w-8">
+        <Avatar className="h-10 w-10 border">
           <AvatarImage
             src={row.original.user.avatar}
             alt={row.original.user.name}

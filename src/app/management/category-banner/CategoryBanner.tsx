@@ -88,7 +88,7 @@ const CategoryBanner = () => {
         <div className="flex items-center justify-between">
           <PageHeader
             title="Category & Banner"
-            description="Manage application categories and promotional banners."
+            // description="Manage application categories and promotional banners."
             showBack={true}
           />
           <CategoryAddModal />

@@ -62,7 +62,7 @@ export function CategoryAddModal() {
       title="Add New Category"
       description="Create a new category with associated banner and display order."
       actionTrigger={
-        <Button className="rounded-full">
+        <Button>
           <Plus />
           Add Category
         </Button>

@@ -1,9 +1,8 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { OrderViewModal } from "./order-view-modal";
 import {
   Select,
   SelectContent,
@@ -44,7 +43,7 @@ export const orderColumns: ColumnDef<Order>[] = [
     header: "Winner",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <Avatar className="h-8 w-8">
+        <Avatar className="h-10 w-10 border">
           <AvatarImage
             src={row.original.winner.avatar}
             alt={row.original.winner.name}
@@ -115,15 +114,9 @@ export const orderColumns: ColumnDef<Order>[] = [
   {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
-    cell: () => (
+    cell: ({ row }) => (
       <div className="text-right">
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-8 w-8 text-amber-500 border-amber-500 hover:bg-amber-50 hover:text-amber-600"
-        >
-          <Eye />
-        </Button>
+        <OrderViewModal order={row.original} />
       </div>
     ),
     enableSorting: false,

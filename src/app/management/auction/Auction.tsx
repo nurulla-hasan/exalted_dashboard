@@ -1,6 +1,6 @@
 import PageLayout from "@/components/common/page-layout";
 import { auctionColumns, type Auction } from "@/components/management/auction/auction-columns";
-import { AuctionFilter } from "@/components/management/auction/auction-filter";
+import { AuctionCreateModal } from "@/components/management/auction/auction-create-modal";
 import { DataTable } from "@/components/ui/custom/data-table";
 import PageHeader from "@/components/ui/custom/page-header";
 
@@ -98,11 +98,12 @@ const AuctionManagement = () => {
         <div className="flex flex-col md:flex-row md:justify-between gap-4">
           <PageHeader 
             title="Auction Management" 
-            description="Manage all your active and scheduled auctions from here." 
-            length={auctions.length}
+            // description="Manage all your active and scheduled auctions from here." 
+            // length={auctions.length}
             showBack={true}
           />
-          <AuctionFilter />
+          {/* <AuctionFilter /> */}
+          <AuctionCreateModal />
         </div>
         
         <div className="bg-card rounded-xl border border-border overflow-hidden">

@@ -121,7 +121,7 @@ const OrderManagement = () => {
         <div className="flex items-center justify-between">
           <PageHeader
             title="Order Management"
-            description="Track and manage customer orders and shipments."
+            // description="Track and manage customer orders and shipments."
             showBack={true}
           />
           <OrderFilter />

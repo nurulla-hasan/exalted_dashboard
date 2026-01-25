@@ -21,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const FALLBACK_ADMIN = {
   name: "Golap Hasan",
   email: "admin@popy.com",
-  profile_image: "https://i.pravatar.cc/150?img=32",
+  profile_image: "https://i.pravatar.cc/150?img=33",
 };
 
 const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
@@ -56,7 +56,7 @@ const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           <Toggle
             variant="ghost"
             size="sm"
-            className="group rounded-full hidden lg:flex"
+            className="group rounded-full hidden lg:flex bg-sidebar-accent"
             pressed={theme === "dark"}
             onPressedChange={() =>
               setTheme(theme === "dark" ? "light" : "dark")
@@ -70,7 +70,7 @@ const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </Toggle>
           {/* Notification icon */}
           <Link to="/notifications">
-            <Button variant="ghost" size="icon-sm" className="rounded-full relative">
+            <Button variant="ghost" size="icon-sm" className="rounded-full relative bg-sidebar-accent text-primary">
               <Bell className="h-4 w-4" />
               {/* <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full border-2 border-background"></span> */}
             </Button>
@@ -99,7 +99,7 @@ const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
                     <AvatarFallback>{getInitials(admin?.name)}</AvatarFallback>
                   </Avatar>
                   <span
-                    className="text-sm font-medium truncate max-w-45"
+                    className="text-sm font-medium text-sidebar-accent truncate max-w-45"
                     title={admin?.name || "user"}
                   >
                     {admin?.name || "user"}

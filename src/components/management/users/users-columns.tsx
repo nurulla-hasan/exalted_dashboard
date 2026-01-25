@@ -4,6 +4,7 @@ import { Ban } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export type User = {
   id: number;
@@ -15,13 +16,25 @@ export type User = {
 
 export const usersColumns: ColumnDef<User>[] = [
   {
+    accessorKey: "id",
+    header: "SL no.",
+    cell: ({ row }) => (
+      <span>
+        {row.index + 1}
+      </span>
+    ),
+  },
+  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-sm">
-          {row.original.name.charAt(0)}
-        </div>
+        <Avatar className="h-10 w-10 border">
+          <AvatarImage src="" alt={row.original.name} />
+          <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+            {row.original.name.substring(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
         <span className="text-sm font-medium text-foreground">
           {row.original.name}
         </span>

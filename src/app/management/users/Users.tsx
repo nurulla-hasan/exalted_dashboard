@@ -93,8 +93,9 @@ const Users = () => {
       <div className="flex flex-col md:flex-row md:justify-between gap-2">
         <PageHeader
           title="User Management"
-          description="User all Platform Users"
-          length={users.length}
+          showBack={true}
+          // description="User all Platform Users"
+          // length={users.length}
         />
 
         <UsersFilter />

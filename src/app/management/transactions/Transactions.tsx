@@ -158,7 +158,7 @@ const Transactions = () => {
         <div className="flex items-center justify-between">
           <PageHeader
             title="Transactions"
-            description="View and manage all financial transactions and history."
+            // description="View and manage all financial transactions and history."
             showBack={true}
           />
           <TransactionFilter />

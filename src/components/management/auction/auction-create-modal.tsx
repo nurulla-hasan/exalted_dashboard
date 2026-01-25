@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Plus, CalendarIcon, Clock, ImagePlus, X } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,6 +48,7 @@ export function AuctionCreateModal() {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<AuctionFormValues>({
     resolver: zodResolver(auctionSchema),
@@ -90,10 +91,28 @@ export function AuctionCreateModal() {
     form.setValue("startingTime", newDate);
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          setImages((prev) => {
+              const updated = [...prev, result];
+              form.setValue("itemImages", updated, { shouldValidate: true });
+              return updated;
+            });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
   const removeImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages);
-    form.setValue("itemImages", newImages);
+    form.setValue("itemImages", newImages, { shouldValidate: true });
   };
 
   const onSubmit = async (values: AuctionFormValues) => {
@@ -123,7 +142,7 @@ export function AuctionCreateModal() {
       title="Create New Auction"
       description="Fill in the details below to list a new item for auction."
       actionTrigger={
-        <Button className="rounded-full">
+        <Button>
           <Plus />
           Create Auction
         </Button>
@@ -423,11 +442,27 @@ export function AuctionCreateModal() {
                       </button>
                     </div>
                   ))}
-                  <div className="border-2 border-dashed border-amber-200 rounded-lg flex flex-col items-center justify-center gap-1 hover:bg-amber-50 cursor-pointer transition-colors aspect-square">
+                  <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-dashed border-amber-200 rounded-lg flex flex-col items-center justify-center gap-1 hover:bg-amber-50 cursor-pointer transition-colors aspect-square"
+                  >
                     <ImagePlus className="h-5 w-5 text-amber-500" />
                     <span className="text-[10px] text-amber-500 font-bold italic uppercase">Add image</span>
                   </div>
                 </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  multiple
+                  accept="image/*"
+                  className="hidden"
+                />
+                {form.formState.errors.itemImages && (
+                  <p className="text-sm font-medium text-destructive">
+                    {form.formState.errors.itemImages.message}
+                  </p>
+                )}
               </div>
             </div>
           </ScrollArea>
